@@ -8,6 +8,7 @@ export const StoreContext = createContext(null);
 
 export const StoreContextProvider = (props) => {
   const [cartItems, setCartItems] = useState({});
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const addToCart = (itemId) => {
     if (!cartItems[itemId]) {
@@ -39,6 +40,8 @@ export const StoreContextProvider = (props) => {
     addToCart,
     removeFromCart,
     getTotalCartAmount,
+    isAuthenticated,
+    setIsAuthenticated,
   };
   return (
     <StoreContext.Provider value={contextValue}>

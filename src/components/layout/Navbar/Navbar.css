@@ -45,7 +45,7 @@
 }
 
 a:hover {
-color: tomato;
+  color: tomato;
 }
 
 .navbar ul li {
@@ -111,4 +111,34 @@ color: tomato;
   .navbar-menu {
     display: none;
   }
+}
+
+/**!?-------------------------------------------------------*/
+.profile-dropdown {
+  position: absolute;
+  top: 50px;
+  right: 120px;
+  background-color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  padding: 1rem;
+  width: 300px;
+  z-index: 100;
+}
+
+.profile-dropdown p {
+  margin: 0.5rem 0;
+}
+
+.profile-dropdown button {
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.profile-dropdown button:hover {
+  background-color: #e5533f;
 }

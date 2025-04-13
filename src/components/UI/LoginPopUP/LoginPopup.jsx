@@ -1,13 +1,17 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from "react";
 import "./LoginPopup.css";
-import { RxCross1, RxCross2 } from "react-icons/rx";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { RxCross2 } from "react-icons/rx";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth, db } from "../../../firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
 
 const LoginPopup = ({ setShowLogin }) => {
-  const [curState, setCurState] = useState("Sign Up");
+  const [curState, setCurState] = useState("Login");
 
   const [data, setData] = useState({
     name: "",
@@ -28,25 +32,33 @@ const LoginPopup = ({ setShowLogin }) => {
     e.preventDefault();
     // console.log(data);
     try {
-      await createUserWithEmailAndPassword(auth, data.email, data.password);
-      const user = auth.currentUser;
-      console.log(user);
-      if (user) {
-        await setDoc(doc(db, "Users", user.uid), {
-          email: user.email,
-          name: user.name,
-        });
+      if (curState === "Sign Up") {
+        await createUserWithEmailAndPassword(auth, data.email, data.password);
+        const user = auth.currentUser;
+        console.log(user);
+        if (user) {
+          await setDoc(doc(db, "Users", user.uid), {
+            email: user.email,
+            name: data.name,
+          });
+        }
+        console.log("User Registered Successfully.");
+        toast.success("You are Registered Successfully.");
+      } else if (curState === "Login") {
+        await signInWithEmailAndPassword(auth, data.email, data.password);
+        toast("You are Logged in Successfully.");
       }
-      console.log("User Registered Successfully.");
       setData({
         name: "",
         email: "",
         password: "",
       });
+
+      // setShowLogin(false);
     } catch (error) {
       console.log(error.message);
+      toast.error(error.message);
     }
-    setShowLogin(false)
   };
 
   return (
@@ -67,7 +79,7 @@ const LoginPopup = ({ setShowLogin }) => {
               type="text"
               placeholder="enter you name"
               name="name"
-              required
+              required={curState === "Sign Up"}
               value={data.name}
               onChange={handleInputChange}
             />

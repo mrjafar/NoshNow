@@ -3,8 +3,14 @@
   margin: auto;
   border-radius: 15px;
   box-shadow: 0px 0px 10px #00000015;
+  position: relative; /* Make sure the food-item is a positioning context */
+  overflow: hidden;
   transition: 0.3s;
   animation: fadeIn 1s;
+
+  &:hover {
+    scale: 1.02;
+  }
 }
 
 .food-item-image {
@@ -38,7 +44,7 @@
 
 .food-item-description {
   color: #676767;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 .food-item-price {
@@ -82,4 +88,77 @@
   & img {
     width: 30px;
   }
+}
+
+
+
+.food-item-image {
+  /* Existing styles */
+  transition: transform 0.3s ease; /* Smooth transition */
+}
+
+.food-item-image-container:hover .food-item-image {
+  transform: scale(1.1); /* Enlarge image on hover */
+}
+
+.order-now-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2em;
+  opacity: 0; /* Initially hidden */
+  transition: opacity 0.3s ease; /* Smooth transition */
+  z-index: 1;
+}
+
+.food-item-image-container:hover .order-now-overlay {
+  opacity: 1; /* Show overlay on hover */
+}
+
+.order-now-text {
+  color: #fff;
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: overline;
+  text-decoration-color: tomato;
+  text-decoration-thickness: 2px;
+  text-decoration-style:dotted;
+  text-decoration-skip-ink: none;
+  -moz-text-decoration-style:dotted;
+}
+
+.modal {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* background-color: rgba(0, 0, 0, 0.084); */
+  overflow: hidden;
+  border: none;
+  animation: fadeIn 1s;
+  transition: 0.3s;
+
+  /* background-color: white; */
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 999; /* Ensure it's above other content */
 }

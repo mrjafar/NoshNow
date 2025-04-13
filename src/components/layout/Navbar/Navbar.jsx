@@ -1,17 +1,51 @@
-/* eslint-disable react/prop-types */
-import { useContext, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Navbar.css";
-import { assets } from "../../../assets/assets";
 import { TiShoppingCart } from "react-icons/ti";
-import { Link } from "react-router-dom";
-import { StoreContext } from "../../../context/StoreContext";
 import { FaUserCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { auth, db } from "../../../firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { assets } from "../../../assets/assets";
 
 export const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("home");
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+  const [userData, setUserData] = useState(null);
+  // const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const { getTotalCartAmount } = useContext(StoreContext);
+  const fetchUserData = async () => {
+    try {
+      const user = auth.currentUser; // Get current user
+      if (user) {
+        const userDocRef = doc(db, "Users", user.uid); // Reference Firestore document
+        const userDoc = await getDoc(userDocRef); // Fetch data from Firestore
+        if (userDoc.exists()) {
+          setUserData(userDoc.data()); // Store user data
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+
+  const toggleProfileDropdown = () => {
+    setShowProfileDropdown((prev) => !prev);
+  };
+
+  // LogOut functionality-------------------
+  const handleLogout = () => {
+    auth.signOut(); // Logs out the user
+    setUserData(null); // Reset user data
+  };
+
+  // Show Profile functionality---------------------
+  // const toggleProfileModal = () => {
+  //   setShowProfileModal((prev) => !prev);
+  // };
   return (
     <div className="navbar">
       <Link to="/">
@@ -42,7 +76,6 @@ export const Navbar = ({ setShowLogin }) => {
         </a>
         <Link
           to="/contact"
-          // href="#footer"
           onClick={() => setMenu("contact-us")}
           className={menu === "contact-us" ? "active" : ""}
         >
@@ -50,21 +83,31 @@ export const Navbar = ({ setShowLogin }) => {
         </Link>
       </ul>
       <div className="navbar-right">
-        {/* <img src={assets.search_icon} alt="search-icon" /> */}
-        {/* <MdSearch /> */}
-        <div className="navbar-search-icon">
-          {/* <img src={assets.basket_icon} alt="basket-icon" /> */}
-          <Link to="/cart">
-            <TiShoppingCart style={{ fontSize: "2rem" }} />
-          </Link>
-          <div className={getTotalCartAmount() === 0 ? "" : "dot"}></div>
-        </div>
-        <button onClick={() => setShowLogin(true)}>sign in</button>
+        <Link to="/cart">
+          <TiShoppingCart style={{ fontSize: "2rem" }} />
+        </Link>
         <FaUserCircle
-          onClick={() => setShowLogin(true)}
-          style={{ fontSize: "2rem" }}
+          onClick={toggleProfileDropdown}
+          style={{ fontSize: "2rem", cursor: "pointer" }}
           title="profile"
         />
+        {showProfileDropdown && (
+          <div className="profile-dropdown">
+            {userData ? (
+              <>
+                <p>
+                  <strong>Name:</strong> {userData.name}
+                </p>
+                <p>
+                  <strong>Email:</strong> {userData.email}
+                </p>
+                <button onClick={handleLogout}>Logout</button>
+              </>
+            ) : (
+              <button onClick={() => setShowLogin(true)}>Sign In</button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
