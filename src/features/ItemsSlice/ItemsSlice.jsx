@@ -2,35 +2,34 @@ import { createSlice } from "@reduxjs/toolkit";
 import { food_list } from "../../assets/assets";
 
 const initialState = {
-  foodItem: [],
-  cartItem: {},
+  cartItems: {},
+  isAuthenticated: false,
+  foodList: food_list
 };
 
-const FoodItemReducer = createSlice({
-  name: "item",
+const storeSlice = createSlice({
+  name: "food",
   initialState,
   reducers: {
     addToCart(state, action) {
       const itemId = action.payload;
-      if (!state.cartItem[itemId]) {
-        state.cartItem[itemId] = 1;
+      if (!state.cartItems[itemId]) {
+        state.cartItems[itemId] = 1;
       } else {
-        state.cartItem[itemId] += 1;
-      }
-      // Add food item to foodItem array if it doesn't already exist
-      const foodItem = food_list.find((item) => item._id === itemId);
-      if (foodItem && !state.foodItem.some((item) => item._id === itemId)) {
-        state.foodItem.push(foodItem);
+        state.cartItems[itemId] += 1;
       }
     },
     removeFromCart(state, action) {
       const itemId = action.payload;
-      if (state.cartItem[itemId] > 0) {
-        state.cartItem[itemId] -= 1;
-        if (state.cartItem[itemId] === 0) {
-          delete state.cartItem[itemId];
+      if (state.cartItems[itemId]) {
+        state.cartItems[itemId] -= 1;
+        if (state.cartItems[itemId] === 0) {
+          delete state.cartItems[itemId];
         }
       }
+    },
+    setAuthenticated(state, action) {
+      state.isAuthenticated = action.payload;
     },
   },
 });
@@ -38,17 +37,20 @@ const FoodItemReducer = createSlice({
 // Selector to calculate the total cart amount
 export const getTotalCartAmount = (state) => {
   let totalAmount = 0;
-  for (const item in state.foodItems.cartItem) {
-    if (state.foodItems.cartItem[item] > 0) {
-      const foodItem = food_list.find((product) => product._id === item);
-      if (foodItem) {
-        totalAmount += foodItem.price * state.foodItems.cartItem[item];
+
+  // Loop through the keys (item IDs) in cartItems
+  for (const itemId in state.cartItems) {
+    if (state.cartItems[itemId] > 0) {
+      const itemInfo = state.foodList.find((product) => product._id === itemId);
+      if (itemInfo) {
+        totalAmount += itemInfo.price * state.cartItems[itemId];
       }
     }
   }
+
   return totalAmount;
 };
 
-export const { addToCart, removeFromCart } = FoodItemReducer.actions;
+export const { addToCart, removeFromCart, setAuthenticated } = storeSlice.actions;
 
-export default FoodItemReducer.reducer;
+export default storeSlice.reducer;

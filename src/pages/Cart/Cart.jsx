@@ -1,17 +1,20 @@
-import React, { useContext } from "react";
+import React from "react";
 import "./Cart.css";
-import { StoreContext } from "../../context/StoreContext";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-// import { removeFromCart } from "../../features/ItemsSlice/ItemsSlice";
+import { getTotalCartAmount, removeFromCart } from "../../features/ItemsSlice/ItemsSlice";
+
 const Cart = () => {
-  const { cartItems, food_list, removeFromCart, getTotalCartAmount } =
-    useContext(StoreContext);
-  // const { food_list, getTotalCartAmount } = useContext(StoreContext);
+  const cartItems = useSelector((state) => state.foodItems.cartItems);
+  const food_list = useSelector((state) => state.foodItems.foodList);
+  const getTotalCart = useSelector((state) => getTotalCartAmount(state.foodItems));
+  console.log(getTotalCart);
+  
+  // const { cartItems, food_list, removeFromCart, getTotalCartAmount } =
+    // useContext(StoreContext);
+    // const {getTotalCartAmount} = useContext(StoreContext);
 
-  // const cartItems = useSelector((state) => state.foodItems.cartItem);
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
   const isEmptyCart = !food_list.some((curItem) => cartItems[curItem._id] > 0);
@@ -69,18 +72,18 @@ const Cart = () => {
           <div>
             <div className="cart-total-details">
               <p>Subtotal</p>
-              <p>${getTotalCartAmount()}</p>
+              <p>${getTotalCart}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <p>Delivery Fee</p>
-              <p>${getTotalCartAmount() === 0 ? 0 : 2}</p>
+              <p>${getTotalCart === 0 ? 0 : 2}</p>
             </div>
             <hr />
             <div className="cart-total-details">
               <b>Total</b>
               <b>
-                ${getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2}
+                ${getTotalCart === 0 ? 0 : getTotalCart + 2}
               </b>
             </div>
           </div>

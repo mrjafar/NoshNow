@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import { TiShoppingCart } from "react-icons/ti";
 import { FaUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { data, Link, NavLink, useNavigate } from "react-router-dom";
 import { auth, db } from "../../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { assets } from "../../../assets/assets";
+import { IoIosArrowDown } from "react-icons/io";
+import { MdLogout } from "react-icons/md";
 
 export const Navbar = ({ setShowLogin }) => {
   const [menu, setMenu] = useState("home");
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
   // const [showProfileModal, setShowProfileModal] = useState(false);
 
   const fetchUserData = async () => {
@@ -34,74 +37,85 @@ export const Navbar = ({ setShowLogin }) => {
 
   const toggleProfileDropdown = () => {
     setShowProfileDropdown((prev) => !prev);
+    setTimeout(() => {
+      setShowProfileDropdown(false);
+    }, 2000);
   };
 
   // LogOut functionality-------------------
   const handleLogout = () => {
-    auth.signOut(); // Logs out the user
-    setUserData(null); // Reset user data
+    auth.signOut();
+    setUserData(null);
   };
 
-  // Show Profile functionality---------------------
-  // const toggleProfileModal = () => {
-  //   setShowProfileModal((prev) => !prev);
-  // };
+  const goToProfile = () => {
+    navigate("profile", { state: { data: userData } })
+  }
+
   return (
     <div className="navbar">
       <Link to="/">
         <img src={assets.logo} alt="logo" className="logo" />
       </Link>
       <ul className="navbar-menu">
-        <Link to="/">
+        <NavLink to="/">
           <li
-            onClick={() => setMenu("home")}
-            className={menu === "home" ? "active" : ""}
+          // onClick={() => setMenu("home")}
+          // className={menu === "home" ? "active" : ""}
           >
             Home
           </li>
-        </Link>
+        </NavLink>
         <a
           href="#explore-menu"
           onClick={() => setMenu("menu")}
-          className={menu === "menu" ? "active" : ""}
+        // className={menu === "menu" ? "active" : ""}
         >
           menu
         </a>
         <a
           href="#app-download"
           onClick={() => setMenu("mobile-app")}
-          className={menu === "mobile-app" ? "active" : ""}
+        // className={menu === "mobile-app" ? "active" : ""}
         >
           mobile-app
         </a>
-        <Link
+        <NavLink
           to="/contact"
           onClick={() => setMenu("contact-us")}
-          className={menu === "contact-us" ? "active" : ""}
+        // className={menu === "contact-us" ? "active" : ""}
         >
           contact us
-        </Link>
+        </NavLink>
       </ul>
       <div className="navbar-right">
         <Link to="/cart">
           <TiShoppingCart style={{ fontSize: "2rem" }} />
         </Link>
-        <FaUserCircle
-          onClick={toggleProfileDropdown}
-          style={{ fontSize: "2rem", cursor: "pointer" }}
-          title="profile"
-        />
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "0.2rem" }}>
+          <FaUserCircle
+
+            style={{ fontSize: "2rem", cursor: "pointer" }}
+            title="profile"
+          />
+          <IoIosArrowDown onMouseOver={toggleProfileDropdown} />
+        </div>
         {showProfileDropdown && (
           <div className="profile-dropdown">
             {userData ? (
               <>
-                <p>
-                  <strong>Name:</strong> {userData.name}
+                {console.log(userData)}
+                {/* <Link > */}
+                <p onClick={goToProfile}>
+                  My Profile
                 </p>
-                <p>
-                  <strong>Email:</strong> {userData.email}
-                </p>
-                <button onClick={handleLogout}>Logout</button>
+                {/* </Link> */}
+                <Link to="/cart">
+                  <p>
+                    My Orders
+                  </p>
+                </Link>
+                <p onClick={handleLogout} title="logout"><MdLogout />Logout</p>
               </>
             ) : (
               <button onClick={() => setShowLogin(true)}>Sign In</button>
@@ -109,6 +123,6 @@ export const Navbar = ({ setShowLogin }) => {
           </div>
         )}
       </div>
-    </div>
+    </div >
   );
 };

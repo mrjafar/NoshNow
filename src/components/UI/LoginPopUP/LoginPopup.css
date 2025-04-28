@@ -66,6 +66,7 @@
 
   & input {
     margin-top: 5px;
+    width: 20px;
   }
 }
 
@@ -74,4 +75,11 @@
   font-weight: 500;
   text-decoration: underline;
   cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+  .login-popup-container {
+    width: max(80vw, 30px);
+  }
 }

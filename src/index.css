@@ -20,14 +20,15 @@ a {
 button {
   border: none;
   padding: 10px;
-  border-radius: 4px;
+  border-radius: 5px;
   color: #fff;
   background-color: tomato;
   font-size: 15px;
   border: 2px solid tomato;
   cursor: pointer;
+  /*text-underline-offset: 3rem;
+  */
   transition: all 0.3s linear;
-
   &:hover {
     background-color: transparent;
     color: tomato;

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import "./Home.css"
-
 import { ExploreMenu } from '../../components/UI/ExploreMenu/ExploreMenu'
 import FoodDisplay from '../../components/UI/FoodDisplay/FoodDisplay'
 import AppDownload from '../../components/UI/AppDownload/AppDownload'

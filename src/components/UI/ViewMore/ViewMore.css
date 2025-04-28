@@ -1,7 +1,7 @@
 .view-more {
   display: flex;
   flex-wrap: wrap;
-  gap: .5rem;
+  gap: 0.5rem;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   /* background-color: var(--white); */
@@ -132,9 +132,28 @@
   & button {
     width: 100%;
   }
+
+  & button:nth-child(2) {
+    background-color: #f0ebe5;
+    color: black;
+    &:hover {
+      background-color: #f1bfb6;
+    }
+  }
 }
 
-/* Media query for small screens (e.g., mobile phones) */
+.icon {
+  font-size: 1.1rem;
+  position: absolute;
+}
+.view {
+  right: 11.4rem;
+}
+.plus {
+  right: 26rem;
+}
+
+
 @media (max-width: 768px) {
   /* Adjust the breakpoint as needed */
   .view-more {
@@ -170,6 +189,13 @@
     border-radius: 0;
     box-shadow: none;
   }
+
+  .view-more figure {
+    width: 90%;
+    height: 90%;
+    margin: 0 auto;
+    margin-top: 2rem;
+  }
   .item-detail h1 {
     font-size: 1.4rem;
   }
@@ -184,3 +210,8 @@
     font-size: 0.9rem;
   }
 }
+
+
+
+
+

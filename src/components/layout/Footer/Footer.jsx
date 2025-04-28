@@ -2,6 +2,7 @@ import React from "react";
 import "./Footer.css";
 import { assets } from "../../../assets/assets";
 import { MdFacebook, MdGrid3X3, MdOutlineKebabDining } from "react-icons/md";
+import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -23,20 +24,23 @@ const Footer = () => {
           </div>
         </div>
         <div className="footer-content-center">
-            <h2>COMPANY</h2>
-            <ul>
-                <li>Home</li>
-                <li>About us</li>
-                <li>Delivery</li>
-                <li>Privacy policy</li>
-            </ul>
+          <h2>COMPANY</h2>
+          <ul>
+            <li>Home</li>
+            <li>About us</li>
+            <li>Delivery</li>
+            <li>Privacy policy</li>
+          </ul>
         </div>
         <div className="footer-content-right">
-            <h2>GET IN TOUCH</h2>
-            <ul>
-                <li>+1-212-456-7890</li>
-                <li>contact@tomato.com</li>
-            </ul>
+          <h2>GET IN TOUCH</h2>
+          <ul>
+            <li>+1-212-456-7890</li>
+            <li>contact@noshnow.com</li>
+            <NavLink to="/contact">
+              <li><button>click here for any query:-</button></li>
+            </NavLink>
+          </ul>
         </div>
       </div>
       <hr />

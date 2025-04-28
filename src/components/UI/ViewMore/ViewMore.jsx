@@ -5,40 +5,46 @@ import "./ViewMore.css";
 import { assets } from '../../../assets/assets';
 import { toast } from 'react-toastify';
 import { GiCrossedBones } from 'react-icons/gi';
+import { FaCartPlus } from 'react-icons/fa';
+import { MdPreview } from 'react-icons/md';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart, removeFromCart } from '../../../features/ItemsSlice/ItemsSlice';
+
 
 export const ViewMore = ({ curItem, setIsModalOpen }) => {
-    const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
+    const cartItems = useSelector((state) => state.foodItems.cartItems);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
-
-    if (!curItem) {
-        return <p>Loading...</p>;
-    }
-
-    if (!curItem._id) {
-        return <p>Order not found. Please check the URL or go back to the main page.</p>;
-    }
+    // const { cartItems, addToCart, removeFromCart } = useContext(StoreContext);
 
     const { _id, name, price, description, image, category, material, weight } = curItem;
 
-
+    // handle quantity functionality------
     const handleAddToCartImage = () => {
         if (cartItems[_id]) {
-            addToCart(_id);
+            dispatch(addToCart(_id));
         } else {
             console.log("Item not in cart, cannot increment via '+' button.");
             toast.info(`${name} not in cart. Add via 'Add to Cart' button first.`);
         }
     };
 
+    // handle add to cart button functionality------
     const handleAddToCartButton = () => {
         if (!cartItems[_id]) {
-            addToCart(_id);
+            dispatch(addToCart(_id));
             toast.success(`${name} added to cart`);
         } else {
             toast.info(`${name} quantity updated in cart`);
         }
     };
 
+    if (!curItem) {
+        return <p>Loading...</p>;
+    }
+    if (!curItem._id) {
+        return <p>Order not found. Please check the URL or go back to the main page.</p>;
+    }
     return (
         <>
             <div className='view-more'>
@@ -58,14 +64,14 @@ export const ViewMore = ({ curItem, setIsModalOpen }) => {
                         <p className='material'>Material: {material}</p>
                     </div>
                     <div className='food-item-rating'>
-                        <p className='food-item-price' style={{ fontSize: "1.5rem", margin: "0" }}>${price}</p>
+                        <p className='food-item-price'>${price}</p>
                         <img src={assets.rating_starts} alt="" />
                     </div>
-                    <p className='qty'>Quantity: <br />
+                    <div className='qty'>Quantity: <br />
                         {cartItems[_id] !== undefined ? (
                             <div className="food-item_counter">
                                 <img
-                                    onClick={() => removeFromCart(_id)}
+                                    onClick={() => dispatch(removeFromCart(_id))}
                                     aria-disabled={cartItems[_id] === 0}
                                     src={assets.remove_icon_red}
                                     alt="Remove from cart"
@@ -92,16 +98,22 @@ export const ViewMore = ({ curItem, setIsModalOpen }) => {
                                 />
                             </div>
                         )}
-                    </p>
+                    </div>
 
                     <div className='cart-btn'>
                         <button onClick={handleAddToCartButton}>
-                            {cartItems[_id] ? 'Update Cart' : 'Add to Cart'}
+                            <FaCartPlus className='icon plus' />
+                            {cartItems[_id] ? 'Update Cart' : ' Add to Cart'}
                         </button>
-                        <button onClick={() => {
-                            setIsModalOpen(false);
-                            navigate('/cart');
-                        }} style={{ backgroundColor: "lightblue", color: "black" }}>View Cart</button>
+                        <button
+                            onClick={() => {
+                                setIsModalOpen(false);
+                                navigate('/cart');
+                            }}
+                            className='view-cart-btn'>
+                            <MdPreview className='icon view' />
+                            View Cart
+                        </button>
                     </div>
                 </div>
             </div>
